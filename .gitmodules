@@ -4,3 +4,6 @@
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/microsoft/vcpkg
+[submodule "ArabicString"]
+	path = ArabicString
+	url = https://github.com/MrLibya/ArabicString.git
