@@ -9,7 +9,7 @@ extern "C" {
     void save(BLContext ctx);
     void restore(BLContext ctx);
     void restoreClipping(BLContext ctx);
-    // void resetMatrix(BLContext ctx);
+    void resetMatrix(BLContext ctx);
     void fillAll(BLContext ctx);
     void clearAll(BLContext ctx);
     void clearRect(BLContext ctx, float x, float y, float w, float h);

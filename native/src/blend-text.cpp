@@ -2,13 +2,7 @@
 #include <iostream>
 #include "../include/blend-text.hpp"
 #include <vector>
-#include <harfbuzz/hb.h>
-#include <harfbuzz/hb-ft.h>
 #include <fribidi/fribidi.h>
-
-// #include 
-
-
 
 using namespace std;
 

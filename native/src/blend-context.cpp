@@ -43,9 +43,9 @@ void restoreClipping(BLContext ctx) {
     ctx.restoreClipping();
 }
 
-// void resetMatrix(BLContext ctx) {
-//     ctx.resetMatrix();
-// }
+void resetMatrix(BLContext ctx) {
+    ctx.resetMatrix();
+}
 
 void clearAll(BLContext ctx) {
     if(ctx._d.isContext())
