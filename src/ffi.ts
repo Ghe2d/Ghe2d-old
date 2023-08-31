@@ -367,7 +367,7 @@ dylib.symbols.clearRect(ctx, 0, 0, 256, 256);
 
 // dylib.symbols.setFillStyleRgba(ctx, color(255,255,255,255));
 // dylib.symbols.fillAll(ctx);
-dylib.symbols.setFillStyleRgba(ctx, color(0,0,0,255));
+dylib.symbols.setFillStyleRgba(ctx, color(22,40,90,230));
 dylib.symbols.setStrokeStyleRgba(ctx, color(0,0,0,255));
 dylib.symbols.setStrokeWidth(ctx, 1);
 
@@ -378,12 +378,13 @@ dylib.symbols.setStrokeWidth(ctx, 1);
 
 const fo = new TextEncoder().encode("./font/Cairo-Regular.ttf");
 const fo2 = new TextEncoder().encode("./font/Tajawal-Regular.ttf");
+const fo3 = new TextEncoder().encode("./font/NotoSansArabic-VariableFont_wdth,wght.ttf");
 const font = dylib.symbols.createFont(fo, fo.length, 22);
 const font2 = dylib.symbols.createFont(fo2, fo2.length, 22);
-const buf = new TextEncoder().encode("ضبط الكلام كله ab ssa hello");
+const buf = new TextEncoder().encode("اكل محمد التفاح");
 // dylib.symbols.createFillText(ctx, 1, 50, buf, buf.length, font);
 // dylib.symbols.createStrokeText(ctx, 1, 150, buf, buf.length, font2);
-dylib.symbols.fontTest(ctx, fo, fo.length, buf, buf.length);
+dylib.symbols.fontTest(ctx, fo3, fo3.length, buf, buf.length);
 const cc = await BLtoBuffer(createBL, ctx);
 if(cc) Deno.writeFile("test/test10.png", cc);
 ghe2d.close(createBL, ctx);

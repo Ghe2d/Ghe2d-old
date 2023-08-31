@@ -1,8 +1,13 @@
 #include <blend2d.h>
 #include <iostream>
 #include "../include/blend-text.hpp"
-#include <vector>
 #include <fribidi/fribidi.h>
+#include <vector>
+
+#include <locale>
+#include <codecvt>
+
+#include "../../ArabicString/ArabicString.h"
 
 using namespace std;
 
@@ -229,45 +234,68 @@ void fontTest(BLContext ctx, char* fontPath, int len, char* text, int len2) {
 
 
 
-    const char* text2 = "ﺞﻤﺨﻣ";
+    char  text2[] = "ع مجس مسك احمد محسن عنب ضرط ط";
     size_t textLength = strlen(text2);
 
-    FriBidiChar* utf32Text = new FriBidiChar[textLength + 1];
-    mbstowcs((wchar_t*)utf32Text, text2, textLength + 1);
+    // FriBidiChar* utf32Text = new FriBidiChar[textLength + 1];
+    // mbstowcs((wchar_t*)utf32Text, text2, textLength + 1);
 
-    FriBidiCharSet charset = FRIBIDI_CHAR_SET_UTF8;
-    FriBidiFlags flags = FRIBIDI_FLAGS_DEFAULT | FRIBIDI_FLAGS_ARABIC;
-    FriBidiChar* visualText = new FriBidiChar[textLength + 1];
+    // FriBidiCharSet charset = FRIBIDI_CHAR_SET_UTF8;
+    // FriBidiFlags flags = FRIBIDI_FLAGS_DEFAULT | FRIBIDI_FLAGS_ARABIC;
+    // FriBidiChar* visualText = new FriBidiChar[textLength + 1];
 
-    fribidi_charset_to_unicode(charset, text2, textLength, visualText);
+    // fribidi_charset_to_unicode(charset, text2, textLength, visualText);
 
-    const FriBidiLevel baseLevel = 0;
-    FriBidiLevel* embeddingLevels = new FriBidiLevel[textLength];
-    for (size_t i = 0; i < textLength; ++i) {
-        embeddingLevels[i] = baseLevel;
-    }
+    // const FriBidiLevel baseLevel = 0;
+    // FriBidiLevel* embeddingLevels = new FriBidiLevel[textLength];
+    // for (size_t i = 0; i < textLength; ++i) {
+    //     embeddingLevels[i] = baseLevel;
+    // }
 
-    FriBidiArabicProp *ar_props;
-    ar_props = (FriBidiArabicProp *)malloc(textLength * sizeof(FriBidiArabicProp));
+    // FriBidiArabicProp *ar_props;
+    // ar_props = (FriBidiArabicProp *)malloc(textLength * sizeof(FriBidiArabicProp));
 
-    FriBidiCharType* bidiTypes = new FriBidiCharType[textLength];
-    fribidi_get_bidi_types(visualText, textLength, bidiTypes);
+    // FriBidiCharType* bidiTypes = new FriBidiCharType[textLength];
+    // fribidi_get_bidi_types(visualText, textLength, bidiTypes);
 
-    fribidi_join_arabic(bidiTypes, textLength, embeddingLevels, ar_props);
-    // fribidi_shape_arabic(flags, embeddingLevels, textLength, ar_props, visualText);
-    fribidi_shape(flags, embeddingLevels, textLength, ar_props, visualText);
+    // fribidi_join_arabic(bidiTypes, textLength, embeddingLevels, ar_props);
+    // // fribidi_shape_arabic(flags, embeddingLevels, textLength, ar_props, visualText);
+    // fribidi_shape(flags, embeddingLevels, textLength, ar_props, visualText);
 
-    // FriBidiChar* reorderedText = new FriBidiChar[textLength + 1];
-    FriBidiParType baseDir = FRIBIDI_PAR_RTL; // FRIBIDI_PAR_LTR;
+    // // FriBidiChar* reorderedText = new FriBidiChar[textLength + 1];
+    // FriBidiParType baseDir = FRIBIDI_PAR_RTL; // FRIBIDI_PAR_LTR;
 
-    FriBidiChar* reorderedText = new FriBidiChar[textLength];
+    // FriBidiChar* reorderedText = new FriBidiChar[textLength];
 
-    fribidi_log2vis(reinterpret_cast<const FriBidiChar*>(text2), textLength, &baseDir, reorderedText, NULL, NULL, NULL);
+    // fribidi_log2vis(reinterpret_cast<const FriBidiChar*>(text2), textLength, &baseDir, reorderedText, NULL, NULL, NULL);
 
-    BLGlyphBuffer glyphBuffer;
+    // BLGlyphBuffer glyphBuffer;
     // glyphBuffer.setUtf32Text(visualText, textLength);
     // glyphBuffer.setWCharText((const wchar_t*)visualText, textLength);
     // ctx.fillUtf32Text(BLPoint(10,50), font, visualText);
     // ctx.fillGlyphRun(BLPoint(10, 50), font, glyphBuffer.glyphRun());
-    ctx.fillUtf8Text(BLPoint(10, 50), font, text2);
+    // ArabicString::goArabic();
+    wstring_convert<codecvt_utf8_utf16<wchar_t>, wchar_t> converter0;
+    wstring ws = converter0.from_bytes(string(text, len2));
+    wcout<<ws<<endl;
+    ArabicString test = ws.c_str();
+    test.makeShape();
+    // const char * data = test.getText().c_str();
+    wcout<<test.getText()<<endl;
+    wcout << test.getShape() << endl;
+    wcout << test.getReShape()<<endl;
+
+    wstring_convert<codecvt_utf8<wchar_t>> converter;
+    string s = converter.to_bytes(test.getReShape());
+    
+    ctx.fillUtf8Text(BLPoint(10, 50), font, s.c_str());
 }
+
+inline string to_string(const wstring& str, const locale& loc = locale{})
+{
+	vector<char> buf(str.size());
+	use_facet<ctype<wchar_t>>(loc).narrow(str.data(), str.data() + str.size(), '?', buf.data());
+
+	return string(buf.data(), buf.size());
+}
+
