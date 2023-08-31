@@ -4,3 +4,9 @@
 [submodule "blend2d"]
 	path = blend2d
 	url = https://github.com/blend2d/blend2d.git
+[submodule "asmjit"]
+	path = asmjit
+	url = https://github.com/asmjit/asmjit
+[submodule "vcpkg"]
+	path = vcpkg
+	url = https://github.com/microsoft/vcpkg
