@@ -47,14 +47,14 @@ void reset(BLImage img, BLContext ctx) {
     }
 }
 
-const uint8_t * toData(BLImage img, BLContext ctx, size_t *size) {
+    const uint8_t * toData(BLImage img, BLContext ctx, size_t *size) {
     if(img._d.isImage() && ctx._d.isContext()) {
         BLImageCodec codec;
         codec.findByName("PNG");
-        BLArray<uint8_t> buffer;
-        img.writeToData(buffer, codec);
-        *size = buffer.size();
-        return buffer.data();
+        BLArray<uint8_t> *buffer = new BLArray<uint8_t>;
+        img.writeToData(*buffer, codec);
+        *size = buffer->size();
+        return buffer->data();
     }
     return {};
 }

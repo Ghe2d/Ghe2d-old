@@ -7,6 +7,10 @@
 #include <locale>
 #include <codecvt>
 
+#include <typeinfo>
+
+#include <cctype>
+
 #include "../../ArabicString/ArabicString.h"
 
 using namespace std;
@@ -209,7 +213,7 @@ void fontTest(BLContext ctx, char* fontPath, int len, char* text, int len2) {
     BLFontFace face;
     face.createFromFile(string(fontPath, len).c_str());
     BLFont font;
-    font.createFromFace(face, 20);
+    font.createFromFace(face, 25);
 
     // size_t lenn = mbstowcs(NULL, string(text, len2).c_str(), 0);
 
@@ -275,27 +279,163 @@ void fontTest(BLContext ctx, char* fontPath, int len, char* text, int len2) {
     // ctx.fillUtf32Text(BLPoint(10,50), font, visualText);
     // ctx.fillGlyphRun(BLPoint(10, 50), font, glyphBuffer.glyphRun());
     // ArabicString::goArabic();
+    const string txt = getArabicString(string(text, len2));
+    string new_txt;
+
+    ar_right_left(txt, new_txt);
+    ctx.fillUtf8Text(BLPoint(10, 50), font, new_txt.c_str());
+}
+
+string getArabicString(string text) {
     wstring_convert<codecvt_utf8_utf16<wchar_t>, wchar_t> converter0;
-    wstring ws = converter0.from_bytes(string(text, len2));
-    wcout<<ws<<endl;
-    ArabicString test = ws.c_str();
-    test.makeShape();
-    // const char * data = test.getText().c_str();
-    wcout<<test.getText()<<endl;
-    wcout << test.getShape() << endl;
-    wcout << test.getReShape()<<endl;
+    wstring ws = converter0.from_bytes(text);
+    
+    ArabicString ar_text = ws.c_str();
+    ar_text.makeShape();
 
     wstring_convert<codecvt_utf8<wchar_t>> converter;
-    string s = converter.to_bytes(test.getReShape());
+    string re_text = converter.to_bytes(ar_text.getReShape());
+    return re_text;
+}
+
+size_t text_split(const string &txt, vector<string> &strs, char ch) {
+    size_t pos = txt.find( ch );
+    size_t initialPos = 0;
+    strs.clear();
+
+    while( pos != string::npos ) {
+        strs.push_back( txt.substr( initialPos, pos - initialPos ) );
+        initialPos = pos + 1;
+        pos = txt.find( ch, initialPos );
+    }
+
+    strs.push_back( txt.substr( initialPos, min( pos, txt.size() ) - initialPos + 1 ) );
+
+    return strs.size();
+}
+
+bool containsOnlyEnglish(string const &str) {
+	return str.find_first_not_of(
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890\\`'!@#$%^&*()_-=+{}~<>\":;?/.,") ==
+		string::npos;
+}
+
+void reverse(string const &txt, string &str) {
+	for (int i = txt.length() - 1,j=0; i >= 0; i--,j++)
+		str += txt[i];
+}
+
+void ar_right_left(const string text, string &str) {
+    bool right = !isalpha(text[text.length() - 1]);
+    vector<string> split_txt_first;
+    string after_reverce;
+    size_t size = text_split(text, split_txt_first, ' ');
+    for(size_t i = 0; i < size; i++) {
+        if(containsOnlyEnglish(split_txt_first[i])) {
+            string reverse_txt;
+            reverse(split_txt_first[i], reverse_txt);
+            after_reverce += reverse_txt;
+        }
+        else {
+            size_t eng_len = 0;
+            for(size_t j = 0; j< split_txt_first[i].length(); j++) {
+                if(isalpha(split_txt_first[i][j])) eng_len++;
+            }
+            if(eng_len > 0) {
+                int index = 0;
+                int end = 0;
+                string sub_txt;
+                for(size_t j = 0; j< split_txt_first[i].length(); j++) {
+                    if(isalpha(split_txt_first[i][j])) {
+                        if(index == 0) index = j + 1;
+                        else end++;
+                    }
+                    else if(index != 0 && end != 0) {
+                        string reverse_txt;
+                        reverse(split_txt_first[i].substr(index - 1, end + 1), reverse_txt);
+                        for(size_t k = 0; k < reverse_txt.length(); k++) {
+                            sub_txt += reverse_txt[k];
+                        }
+                        sub_txt += split_txt_first[i][j];
+                        index = 0;
+                        end = 0;
+                    }
+                    else {
+                        if(index != 0) 
+                            sub_txt += split_txt_first[i][index - 1];
+                        index = 0;
+                        end = 0;
+                        sub_txt += split_txt_first[i][j];
+                    }
+                }
+                if(index != 0 && end != 0) {
+                    string reverse_txt;
+                    reverse(split_txt_first[i].substr(index - 1, end + 1), reverse_txt);
+                    for(size_t k = 0; k < reverse_txt.length(); k++)
+                        sub_txt += reverse_txt[k];
+                }
+                else if(index != 0) {
+                    sub_txt += split_txt_first[i][index - 1];
+                }
+                after_reverce += sub_txt;
+            }
+            else after_reverce += split_txt_first[i];
+        }
+        if(i < size - 1) after_reverce += " ";
+    }
     
-    ctx.fillUtf8Text(BLPoint(10, 50), font, s.c_str());
+    string after_reverce_2;
+    if(!right) {
+        vector<string> split_txt_seconde;
+        size_t size_2 = text_split(after_reverce, split_txt_seconde, ' ');
+        for (int i = size_2 - 1,j=0; i >= 0; i--,j++) {
+            after_reverce_2 += split_txt_seconde[i];
+            if(i > 0) after_reverce_2 += " ";
+        }
+    }
+
+    vector<string> split_txt_third;
+    size_t size_3 = text_split(right ? after_reverce : after_reverce_2, split_txt_third, ' ');
+    int index = 0;
+    int end = 0;
+    for(size_t i = 0; i < size_3; i++) {
+        if(right && containsOnlyEnglish(split_txt_third[i])) {
+            if(index == 0) index = i + 1;
+            else end++;
+        }
+        else if(!right && !containsOnlyEnglish(split_txt_third[i])) {
+            if(index == 0) index = i + 1;
+            else end++;
+        }
+        else if(index != 0 && end != 0) {
+        	for (int j = end,k=0; j >= 0; j--,k++) {
+                str += split_txt_third[index - 1 + j];
+                str += " ";
+            }
+            str += split_txt_third[i];
+            if(i < size_3 - 1) str += " ";
+            index = 0;
+            end = 0;
+        }
+        else {
+            if(index != 0) {
+                str += split_txt_third[index - 1];
+                str += " ";
+            }
+            index = 0;
+            end = 0;
+            str += split_txt_third[i];
+            if(i < size_3 - 1) str += " ";
+        }
+    }
+    if(index != 0 && end != 0) {
+        for (int j = end,k=0; j >= 0; j--,k++) {
+            str += split_txt_third[index - 1 + j];
+            if(j > 0) str += " ";
+        }
+    }
+    else if(index != 0) {
+        // str += " ";
+        str += split_txt_third[index - 1];
+    }
 }
-
-inline string to_string(const wstring& str, const locale& loc = locale{})
-{
-	vector<char> buf(str.size());
-	use_facet<ctype<wchar_t>>(loc).narrow(str.data(), str.data() + str.size(), '?', buf.data());
-
-	return string(buf.data(), buf.size());
-}
-

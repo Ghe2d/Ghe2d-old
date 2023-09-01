@@ -4,7 +4,7 @@
 
 using namespace std;
 
-size_t text_split(const string &txt, vector<string> &strs, char ch) {
+size_t text_split_1(const string &txt, vector<string> &strs, char ch) {
     size_t pos = txt.find( ch );
     size_t initialPos = 0;
     strs.clear();

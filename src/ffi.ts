@@ -329,16 +329,17 @@ const ghe2d = dylib.symbols;
 // dylib.symbols.saveImage(createBL, buf, buf.length);
 console.log("Start -------------------");
 
-const bl = dylib.symbols.createBLImage(256, 256) as Deno.PointerObject;
+const bl = dylib.symbols.createBLImage(720, 512) as Deno.PointerObject;
 const c = dylib.symbols.createBLContext(bl) as Deno.PointerObject;
 const createBL =  new Deno.UnsafePointerView(bl).pointer;
 const ctx = new Deno.UnsafePointerView(c).pointer;
 
-dylib.symbols.clearRect(ctx, 0, 0, 256, 256);
+dylib.symbols.clearRect(ctx, 0, 0, 512, 512);
 dylib.symbols.setFillStyleRgba(ctx, color(255,255,255,255));
 dylib.symbols.fillRect(ctx, 6, 6, 50, 50);
 dylib.symbols.setFillStyleRgba(ctx, color(0,0,0,200));
 dylib.symbols.fillRect(ctx, 250 - 50, 250 - 50, 50, 50);
+
 
 const linear = dylib.symbols.createLinearGradient(0,0,150,100);
 dylib.symbols.addGradientStop(linear, 0, color(255,255,255,255));
@@ -348,6 +349,7 @@ dylib.symbols.gradientDelete(linear);
 dylib.symbols.fillCircle(ctx, 100, 100, 20);
 
 const a = await BLtoBuffer(createBL, ctx);
+
 if(a) Deno.writeFile("test/test8.png", a);
 
 dylib.symbols.setStrokeWidth(ctx, 20);
@@ -362,11 +364,13 @@ dylib.symbols.strokeCircle(ctx, 100, 200, 20);
 const b = await BLtoBuffer(createBL, ctx);
 if(b) Deno.writeFile("test/test9.png", b);
 
-dylib.symbols.clearRect(ctx, 0, 0, 256, 256);
+dylib.symbols.clearRect(ctx, 0, 0, 512, 512);
 
 
 // dylib.symbols.setFillStyleRgba(ctx, color(255,255,255,255));
 // dylib.symbols.fillAll(ctx);
+dylib.symbols.setFillStyleRgba(ctx, color(255,255,255,255));
+dylib.symbols.fillAll(ctx);
 dylib.symbols.setFillStyleRgba(ctx, color(22,40,90,230));
 dylib.symbols.setStrokeStyleRgba(ctx, color(0,0,0,255));
 dylib.symbols.setStrokeWidth(ctx, 1);
@@ -375,16 +379,19 @@ dylib.symbols.setStrokeWidth(ctx, 1);
 
 // const d = await BLtoBuffer(createBL, ctx);
 // if(d) Deno.writeFile("test/test11.png", d);
-
 const fo = new TextEncoder().encode("./font/Cairo-Regular.ttf");
 const fo2 = new TextEncoder().encode("./font/Tajawal-Regular.ttf");
 const fo3 = new TextEncoder().encode("./font/NotoSansArabic-VariableFont_wdth,wght.ttf");
+const fo4 = new TextEncoder().encode("./font/(A) Arslan Wessam B (A) Arslan Wessam B.ttf");
+const fo5 = new TextEncoder().encode("./font/FrutigerLTArabic.ttf");
+const fo6 = new TextEncoder().encode("./font/IBMPlexSansArabic-Bold.ttf");
+const fo7 = new TextEncoder().encode("./font/Ruwudu-Regular.ttf");
 const font = dylib.symbols.createFont(fo, fo.length, 22);
 const font2 = dylib.symbols.createFont(fo2, fo2.length, 22);
-const buf = new TextEncoder().encode("اكل محمد التفاح");
+const buf = new TextEncoder().encode("أحمد eat a book المعلم لانه شبعان عن طريق Mac العرب");
 // dylib.symbols.createFillText(ctx, 1, 50, buf, buf.length, font);
 // dylib.symbols.createStrokeText(ctx, 1, 150, buf, buf.length, font2);
-dylib.symbols.fontTest(ctx, fo3, fo3.length, buf, buf.length);
+dylib.symbols.fontTest(ctx, fo4, fo4.length, buf, buf.length);
 const cc = await BLtoBuffer(createBL, ctx);
 if(cc) Deno.writeFile("test/test10.png", cc);
 ghe2d.close(createBL, ctx);
@@ -396,7 +403,8 @@ async function BLtoBuffer(createBL: Deno.PointerValue, ctx: Deno.PointerValue) {
     if(!dylib.symbols.imageIsValid(createBL)) {
         const size = new Uint32Array(1);
         const imgBuffer = await dylib.symbols.toData(createBL, ctx, size) as Deno.PointerObject;
-        return new Deno.UnsafePointerView(imgBuffer).getArrayBuffer(size[0]) as Uint8Array;
+        const buffer = new Uint8Array(new Uint8Array(new Deno.UnsafePointerView(imgBuffer).getArrayBuffer(size[0])), size[0]);
+        return buffer;
     }
 }
 

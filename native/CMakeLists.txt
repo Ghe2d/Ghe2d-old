@@ -1,17 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
-
-file(GLOB_RECURSE source "*.cpp")
 set(Main_File main)
 set(CMAKE_CXX_STANDARD 11)
-
 set(APP_DIR "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Application directory")
-
-set(CMAKE_PREFIX_PATH "${APP_DIR}/../vcpkg/installed/x64-linux/share")
-# set(VCPKG_INSTALLED_DIR "/home/hlever/Apps/vcpkg/installed")
-# set(VCPKG_TARGET_TRIPLET "x64-linux")
+set(CMAKE_TOOLCHAIN_FILE "${APP_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
+# set(CMAKE_PREFIX_PATH "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share")
 
 project(${Main_File} CXX)
-
 
 
 set(FRIBIDI_DIR "${APP_DIR}/../fribidi-cmake"
@@ -20,7 +14,7 @@ set(FRIBIDI_DIR "${APP_DIR}/../fribidi-cmake"
 set(AR_DIR "${APP_DIR}/../ArabicString"
     CACHE PATH "Location of 'ArabicString'")
 
-
+file(GLOB_RECURSE source "*.cpp")
 add_library(${Main_File} SHARED ${source} "${AR_DIR}/ArabicString.cpp")
 
 
