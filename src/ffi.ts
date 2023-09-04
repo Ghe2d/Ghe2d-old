@@ -91,10 +91,10 @@ const dylib = Deno.dlopen(libName, {
         parameters: ["pointer"],
         result: "void"
     },
-    resetMatrix:{
-        parameters: ["pointer"],
-        result: "void"
-    },
+    // resetMatrix:{
+    //     parameters: ["pointer"],
+    //     result: "void"
+    // },
     // ?-----------------------------
     fillAll:{
         parameters: ["pointer"],

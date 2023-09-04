@@ -1,5 +1,6 @@
-build/.cmake
-build/*CMake*
+/build/.cmake
+/build/*CMake*
+/build/.sconsign.dblite
 /test
 /.vscode
 /ArabicString/ArabicString.os
