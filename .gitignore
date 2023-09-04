@@ -1,3 +1,10 @@
-build
-test
+build/.cmake
+build/*CMake*
+/test
 .vscode
+/ArabicString/ArabicString.os
+/ArabicString/ArabicString.o
+/ArabicString/ArabicString.dll
+/native/src/*.os
+/native/src/*.dll
+/native/src/*.o
