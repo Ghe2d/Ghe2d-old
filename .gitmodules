@@ -1,9 +1,0 @@
-[submodule "fribidi-cmake"]
-	path = fribidi-cmake
-	url = https://github.com/tamaskenez/fribidi-cmake.git
-[submodule "vcpkg"]
-	path = vcpkg
-	url = https://github.com/microsoft/vcpkg
-[submodule "ArabicString"]
-	path = ArabicString
-	url = https://github.com/MrLibya/ArabicString.git
