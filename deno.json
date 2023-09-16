@@ -1,0 +1,14 @@
+{
+  "name": "ghe2d",
+  "github": "https://github.com/hlever-1/Ghe2d",
+  "verision": "0.0.1",
+  "tasks": {
+    "build": ""
+  },
+  "fmt": {
+    "exclude": [
+      "target",
+      "src"
+    ]
+  }
+}

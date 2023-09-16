@@ -1,0 +1,6 @@
+target
+run.sh
+Cargo.lock
+deno.lock
+bindings
+.vscode
