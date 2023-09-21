@@ -1,5 +1,1 @@
-rm -r build
-mkdir build
-cd build
-cmake ../native/
-make
+deno task build
