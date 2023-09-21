@@ -7,3 +7,11 @@ export function __dirname() {
 export function __filename() {
     return path.fromFileUrl(import.meta.url);
 }
+
+export type RGB = { red: number, green: number, blue: number };
+export type RGBA = { red: number, green: number, blue: number, alpha: number };
+export interface Shape {
+    name: "filled_circle" | "hollow_circle" | "filled_linear_circle"
+    data: number[],
+    text?: string
+}
