@@ -1,5 +1,7 @@
-import { Shape } from "./lib/utilty.ts";
-import { createCircle, CircleOptions, CircleReturn } from "./lib/shapes/circle.ts";
+import { Shape } from "./lib/ffi.ts";
+import { CircleOptions, CircleReturn, RectOptions, RectReturn } from "./lib/types.ts";
+import createCircle from "./lib/shapes/circle.ts";
+import createRect from "./lib/shapes/rect.ts";
 
 export class Ghe2d {
     private shapes: Shape[]
@@ -12,6 +14,9 @@ export class Ghe2d {
     }
     createCircle(options?: CircleOptions) : CircleReturn{
         return createCircle(this.shapes, options as CircleOptions);
+    }
+    createRect(options?: RectOptions) : RectReturn{
+        return createRect(this.shapes, options as RectOptions);
     }
 }
 

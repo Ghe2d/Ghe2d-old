@@ -4,3 +4,4 @@ Cargo.lock
 deno.lock
 bindings
 .vscode
+bindings.json
