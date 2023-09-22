@@ -4,7 +4,7 @@ use image::{ImageBuffer, Rgba, RgbaImage};
 
 use std::marker::PhantomData;
 use raqote::{Source, SolidSource, GradientStop, Point, Gradient, Spread, PathBuilder, DrawTarget, LineCap, LineJoin, DrawOptions, StrokeStyle};
-use super::super::{DrawType, GradientType, Shape, Color};
+use super::super::{DrawType, GradientSelect, Shape, Color};
 
 // pub fn create_filled_circle_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>,data: &Vec<i32>) {
 //     draw_filled_circle_mut(
@@ -80,15 +80,15 @@ pub fn draw_circle_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape) 
             for gradient in gradients.iter() {
                 stops.push(GradientStop {position: gradient.position, color: raqote::Color::new(gradient.color[3], gradient.color[0], gradient.color[1], gradient.color[2])});
             }
-            match gradients[0].gradient_type {
-                GradientType::Linear => {
-                    let start = Point { x, y, _unit: PhantomData };
-                    let end = Point { x: radius, y: radius, _unit: PhantomData };
+            match &gradients[0].gradient_select {
+                GradientSelect::Linear {start, end} => {
+                    let start = Point { x: start.x, y: start.y, _unit: PhantomData };
+                    let end = Point { x: end.x, y: end.y, _unit: PhantomData };
                     source = Source::new_linear_gradient(Gradient { stops }, start, end, Spread::Pad );
                 }
-                GradientType::Radial => {
-                    let start = Point { x, y, _unit: PhantomData };
-                    source = Source::new_radial_gradient(Gradient { stops }, start, radius, Spread::Pad );
+                GradientSelect::Radial{center, radius} => {
+                    let start = Point { x: center.x, y: center.y, _unit: PhantomData };
+                    source = Source::new_radial_gradient(Gradient { stops }, start, *radius, Spread::Pad );
                 }
             }
         }

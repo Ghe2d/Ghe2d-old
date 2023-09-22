@@ -1,7 +1,7 @@
 import { Color, Gradient } from "./color.ts";
 
 export interface Rect {
-    x: number 
+    x: number
     y: number
     width: number
     height: number
@@ -10,15 +10,26 @@ export interface Rect {
 }
 
 export interface Circle {
-    x: number 
+    x: number
     y: number
     radius: number
     type: "fill" | "stroke",
     color: Color
 }
 
+export interface Triangle {
+    x1: number
+    y1: number
+    x2: number
+    y2: number
+    x3: number
+    y3: number
+    type: "fill" | "stroke"
+    color: Color
+}
+
 export interface RectOptions {
-    x?: number 
+    x?: number
     y?: number
     width?: number
     height?: number
@@ -27,10 +38,21 @@ export interface RectOptions {
 }
 
 export interface CircleOptions {
-    x?: number 
+    x?: number
     y?: number
     radius?: number
     type?: "fill" | "stroke",
+    color?: Color
+}
+
+export interface TriangleOptions {
+    x1?: number
+    y1?: number
+    x2?: number
+    y2?: number
+    x3?: number
+    y3?: number
+    type?: "fill" | "stroke"
     color?: Color
 }
 
@@ -54,6 +76,18 @@ export interface CircleReturn extends Circle {
     setY(y: number): this
     setXAndY(x: number, y: number): this
     setRadius(radius: number): this
+    setType(type: "fill" | "stroke"): this
+    setRGB(red: number, green: number, blue: number): this
+    setRGBA(red: number, green: number, blue: number, alpha: number): this
+    setGradient(gradient: Gradient): this
+    setColor(color: Color): this
+}
+
+export interface TriangleReturn extends Triangle {
+    draw(options?: RectOptions): this
+    setAngle1(x: number, y: number): this
+    setAngle2(x: number, y: number): this
+    setAngle3(x: number, y: number): this
     setType(type: "fill" | "stroke"): this
     setRGB(red: number, green: number, blue: number): this
     setRGBA(red: number, green: number, blue: number, alpha: number): this

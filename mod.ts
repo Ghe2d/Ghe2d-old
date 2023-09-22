@@ -1,7 +1,8 @@
 import { Shape } from "./lib/ffi.ts";
-import { CircleOptions, CircleReturn, RectOptions, RectReturn } from "./lib/types.ts";
+import { CircleOptions, CircleReturn, RectOptions, RectReturn, TriangleOptions, TriangleReturn } from "./lib/types.ts";
 import createCircle from "./lib/shapes/circle.ts";
 import createRect from "./lib/shapes/rect.ts";
+import createTriangle from "./lib/shapes/triangle.ts";
 
 export class Ghe2d {
     private shapes: Shape[]
@@ -18,6 +19,14 @@ export class Ghe2d {
     createRect(options?: RectOptions) : RectReturn{
         return createRect(this.shapes, options as RectOptions);
     }
+    createTriangle(options?: TriangleOptions) : TriangleReturn{
+        return createTriangle(this.shapes, options as TriangleOptions);
+    }
 }
 
 export * from "./lib/shapes/circle.ts";
+export * from "./lib/shapes/rect.ts";
+export * from "./lib/shapes/triangle.ts";
+export * from "./lib/shapes/triangle.ts";
+export * from "./lib/types.ts";
+export * from "./lib/ffi.ts";

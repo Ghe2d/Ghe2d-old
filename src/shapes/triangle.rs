@@ -1,12 +1,31 @@
-use image::{ImageBuffer, Rgba, RgbaImage};
+use image::{ImageBuffer, Rgba, RgbaImage, load_from_memory};
 use std::marker::PhantomData;
 use raqote::{Source, SolidSource, GradientStop, Point, Gradient, Spread, PathBuilder, DrawTarget, LineCap, LineJoin, DrawOptions, StrokeStyle};
 use super::super::{DrawType, GradientSelect, Shape, Color};
 
-pub fn draw_rect_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape) {
-    let (x, y, width, height) = (shape.data[0], shape.data[1], shape.data[2], shape.data[3]);
+pub fn draw_triangle_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape) {
+    let (x1, y1, x2, y2, x3, y3) = (shape.data[0], shape.data[1], shape.data[2], shape.data[3], shape.data[4], shape.data[5]);
 
-    // Define the start and end points for the gradient
+    let x: f32;
+    let y: f32;
+    if x1 > x2 && x1 > x3{
+        x = x1;
+    }
+    else if x2 > x1 && x2 > x3{
+        x = x2;
+    }
+    else {
+        x = x3;
+    }
+    if y1 > y2 && y1 > y3{
+        y = y1;
+    }
+    else if y2 > y1 && y2 > y3{
+        y = y2;
+    }
+    else {
+        y = y3;
+    }
     let source: Source;
     match &shape.color {
         Color::RGBA { red, green, blue, alpha } => {
@@ -30,11 +49,12 @@ pub fn draw_rect_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape) {
             }
         }
     }
-    // Create a new path builder
     let mut path_builder = PathBuilder::new();
-    path_builder.rect(x, y, width, height);
-        // Create a new DrawTarget
-    let mut draw_target = DrawTarget::new(width as i32, height as i32);
+    path_builder.move_to(x1, y1);
+    path_builder.line_to(x2, y2);
+    path_builder.line_to(x3, y3);
+    path_builder.close();
+    let mut draw_target = DrawTarget::new(x as i32,y as i32);
     match shape.draw_type {
         DrawType::Fill => {
             draw_target.fill(&path_builder.finish(), &source, &DrawOptions::new());
@@ -51,15 +71,11 @@ pub fn draw_rect_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape) {
             draw_target.stroke(&path_builder.finish(), &source, &style, &DrawOptions::new());
         }
     }
-    // Convert raqote DrawTarget to image::ImageBuffer
     let raw_image = draw_target.get_data_u8().to_vec();
-    let buffer:RgbaImage = ImageBuffer::<Rgba<u8>, Vec<u8>>::from_raw(width as u32, height as u32, raw_image).unwrap();
+    let buffer = load_from_memory(&raw_image).unwrap().to_rgba8();
     for (_x, _y, pixel,) in buffer.enumerate_pixels() {
         if pixel != &Rgba([0,0,0,0]) {
-            img.put_pixel(_x + x as u32, _y + y as u32, pixel.to_owned());
+            img.put_pixel(_x, _y, pixel.to_owned());
         }
-        // else {
-        //     img.put_pixel(_x + x as u32, _y + y as u32, *img.get_pixel(_x, _y));
-        // }
     }
 }

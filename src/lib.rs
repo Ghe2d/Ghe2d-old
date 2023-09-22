@@ -14,11 +14,13 @@ use deno_bindgen::deno_bindgen;
 pub type Gradients = Vec<CreateGradient>;
 pub type Color = SelectColor<Gradients>;
 pub type DenoImageData = CreateImage<Shape>;
+pub type GradientSelect = GradientSet<Point>;
 
 #[deno_bindgen]
 pub enum ShapeType {
     Rect,
-    Circle
+    Circle,
+    Triangle
 }
 
 #[deno_bindgen]
@@ -34,14 +36,20 @@ pub enum DrawType {
 }
 
 #[deno_bindgen]
-pub enum GradientType {
-    Linear,
-    Radial
+pub enum GradientSet<T> {
+    Linear{ start: T, end: T },
+    Radial{ center: T, radius: f32 }
+}
+
+#[deno_bindgen]
+pub struct Point{
+    x: f32,
+    y: f32
 }
 
 #[deno_bindgen]
 pub struct CreateGradient {
-    gradient_type: GradientType,
+    gradient_select: GradientSelect,
     position: f32,
     color: Vec<u8>
 }
@@ -70,7 +78,8 @@ fn create_image(width:u32, height:u32, c_image: DenoImageData) -> RgbaImage {
     for shape in c_image.shapes.iter() {
         match shape.shape_type {
             ShapeType::Rect => shapes::rect::draw_rect_mut(&mut img, shape),
-            ShapeType::Circle => shapes::circle::draw_circle_mut(&mut img, shape)
+            ShapeType::Circle => shapes::circle::draw_circle_mut(&mut img, shape),
+            ShapeType::Triangle => shapes::triangle::draw_triangle_mut(&mut img, shape)
         };
     }
     img
