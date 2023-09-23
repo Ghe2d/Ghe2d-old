@@ -66,7 +66,7 @@ use super::super::{DrawType, GradientSelect, Shape, Color};
 //     }
 // }
 
-pub fn draw_circle_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape) {
+pub fn draw_circle_mut(img: &mut RgbaImage, shape: &Shape) {
     let (x, y, radius) = (shape.data[0], shape.data[1], shape.data[2]);
 
     // Define the start and end points for the gradient
