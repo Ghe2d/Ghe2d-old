@@ -28,6 +28,14 @@ export interface Triangle {
     color: Color
 }
 
+export interface Line {
+    x1: number
+    y1: number
+    x2: number
+    y2: number
+    color: Color
+}
+
 export interface RectOptions {
     x?: number
     y?: number
@@ -53,6 +61,14 @@ export interface TriangleOptions {
     x3?: number
     y3?: number
     type?: "fill" | "stroke"
+    color?: Color
+}
+
+export interface LineOptions {
+    x1?: number
+    y1?: number
+    x2?: number
+    y2?: number
     color?: Color
 }
 
@@ -89,6 +105,16 @@ export interface TriangleReturn extends Triangle {
     setAngle2(x: number, y: number): this
     setAngle3(x: number, y: number): this
     setType(type: "fill" | "stroke"): this
+    setRGB(red: number, green: number, blue: number): this
+    setRGBA(red: number, green: number, blue: number, alpha: number): this
+    setGradient(gradient: Gradient): this
+    setColor(color: Color): this
+}
+
+export interface LineReturn extends Line {
+    draw(options?: RectOptions): this
+    setMove(x: number, y: number): this
+    setLine(x: number, y: number): this
     setRGB(red: number, green: number, blue: number): this
     setRGBA(red: number, green: number, blue: number, alpha: number): this
     setGradient(gradient: Gradient): this

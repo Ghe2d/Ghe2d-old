@@ -1,30 +1,24 @@
-use image::{ Rgba, RgbaImage, load_from_memory};
+use image::{Rgba, RgbaImage, load_from_memory};
 use std::marker::PhantomData;
 use raqote::{Source, SolidSource, GradientStop, Point, Gradient, Spread, PathBuilder, DrawTarget, LineCap, LineJoin, DrawOptions, StrokeStyle};
-use super::super::{DrawType, GradientSelect, Shape, Color};
+use super::super::{GradientSelect, Shape, Color};
 
-pub fn draw_triangle_mut(img: &mut RgbaImage, shape: &Shape) {
-    let (x1, y1, x2, y2, x3, y3) = (shape.data[0], shape.data[1], shape.data[2], shape.data[3], shape.data[4], shape.data[5]);
+pub fn draw_line_mut(img: &mut RgbaImage, shape: &Shape) {
+    let (x1, y1, x2, y2) = (shape.data[0], shape.data[1], shape.data[2], shape.data[3]);
 
     let x: f32;
     let y: f32;
-    if x1 > x2 && x1 > x3{
+    if x1 > x2{
         x = x1;
     }
-    else if x2 > x1 && x2 > x3{
+    else {
         x = x2;
     }
-    else {
-        x = x3;
-    }
-    if y1 > y2 && y1 > y3{
+    if y1 > y2{
         y = y1;
     }
-    else if y2 > y1 && y2 > y3{
-        y = y2;
-    }
     else {
-        y = y3;
+        y = y2;
     }
     let source: Source;
     match &shape.color {
@@ -52,25 +46,17 @@ pub fn draw_triangle_mut(img: &mut RgbaImage, shape: &Shape) {
     let mut path_builder = PathBuilder::new();
     path_builder.move_to(x1, y1);
     path_builder.line_to(x2, y2);
-    path_builder.line_to(x3, y3);
     path_builder.close();
     let mut draw_target = DrawTarget::new(x as i32,y as i32);
-    match shape.draw_type {
-        DrawType::Fill => {
-            draw_target.fill(&path_builder.finish(), &source, &DrawOptions::new());
-        }
-        DrawType::Stroke => {
-            let style = StrokeStyle {
-                width: 1.,
-                cap: LineCap::Butt,
-                join: LineJoin::Miter,
-                miter_limit: 10.,
-                dash_array: Vec::new(),
-                dash_offset: 0.,
-            };
-            draw_target.stroke(&path_builder.finish(), &source, &style, &DrawOptions::new());
-        }
-    }
+    let style = StrokeStyle {
+        width: 1.,
+        cap: LineCap::Butt,
+        join: LineJoin::Miter,
+        miter_limit: 10.,
+        dash_array: Vec::new(),
+        dash_offset: 0.,
+    };
+    draw_target.stroke(&path_builder.finish(), &source, &style, &DrawOptions::new());
     let raw_image = draw_target.get_data_u8().to_vec();
     let buffer = load_from_memory(&raw_image).unwrap().to_rgba8();
     for (_x, _y, pixel,) in buffer.enumerate_pixels() {

@@ -1,5 +1,5 @@
 import * as path from "https://deno.land/std@0.197.0/path/mod.ts";
-import { RectReturn, CircleReturn, TriangleReturn, ShapesData } from "./types.ts";
+import { RectReturn, CircleReturn, TriangleReturn, LineOptions, LineReturn, ShapesData } from "./types.ts";
 import { Gradient, Color } from "./color.ts";
 
 export function __dirname() {
@@ -42,6 +42,18 @@ export function setAngle(shape: TriangleReturn, x: number, y: number, num: numbe
     return shape;
 }
 
+export function setLine(shape: LineReturn, x: number, y: number, num: number): LineReturn {
+    if(num == 1) {
+        shape.x1 = x;
+        shape.y1 = y;
+    }
+    else if(num == 2) {
+        shape.x2 = x;
+        shape.y2 = y;
+    }
+    return shape;
+}
+
 export function setRadius(shape: CircleReturn, radius: number): CircleReturn {
     shape.radius = radius;
     return shape;
@@ -62,22 +74,22 @@ export function setType(shape: ShapesData | TriangleReturn, type: "fill" | "stro
     
     return shape;
 }
-export function setRGB(shape: ShapesData | TriangleReturn, red: number, green: number, blue: number) : ShapesData | TriangleReturn {
+export function setRGB(shape: ShapesData | TriangleReturn | LineReturn, red: number, green: number, blue: number) : ShapesData | TriangleReturn | LineReturn {
     shape.color = {red, green, blue, alpha: 255};
     return shape;
 }
 
-export function setRGBA(shape: ShapesData | TriangleReturn, red: number, green: number, blue: number, alpha: number) : ShapesData | TriangleReturn {
+export function setRGBA(shape: ShapesData | TriangleReturn | LineReturn, red: number, green: number, blue: number, alpha: number) : ShapesData | TriangleReturn | LineReturn {
     shape.color = {red, green, blue, alpha};
     return shape;
 }
 
-export function setGradient(shape: ShapesData | TriangleReturn, gradient: Gradient) : ShapesData | TriangleReturn {
+export function setGradient(shape: ShapesData | TriangleReturn | LineReturn, gradient: Gradient) : ShapesData | TriangleReturn | LineReturn {
     shape.color = gradient.stops;
     return shape;
 }
 
-export function setColor(shape: ShapesData | TriangleReturn, color: Color) : ShapesData | TriangleReturn {
+export function setColor(shape: ShapesData | TriangleReturn | LineReturn, color: Color) : ShapesData | TriangleReturn | LineReturn {
     shape.color = color;
     return shape;
 }

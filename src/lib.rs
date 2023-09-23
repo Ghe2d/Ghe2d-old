@@ -20,7 +20,8 @@ pub type GradientSelect = GradientSet<Point>;
 pub enum ShapeType {
     Rect,
     Circle,
-    Triangle
+    Triangle,
+    Line
 }
 
 #[deno_bindgen]
@@ -79,7 +80,8 @@ fn create_image(width:u32, height:u32, c_image: DenoImageData) -> RgbaImage {
         match shape.shape_type {
             ShapeType::Rect => shapes::rect::draw_rect_mut(&mut img, shape),
             ShapeType::Circle => shapes::circle::draw_circle_mut(&mut img, shape),
-            ShapeType::Triangle => shapes::triangle::draw_triangle_mut(&mut img, shape)
+            ShapeType::Triangle => shapes::triangle::draw_triangle_mut(&mut img, shape),
+            ShapeType::Line => shapes::line::draw_line_mut(&mut img, shape)
         };
     }
     img
