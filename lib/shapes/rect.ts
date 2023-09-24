@@ -44,6 +44,7 @@ function draw(rect: RectReturn, data: Shape[], options?: RectOptions): RectRetur
         data: [options.x, options.y, options.width, options.height],
         draw_type: options.type == "fill" ? "Fill" : "Stroke",
         text: null,
+        path: null,
         color: options.color
     });
     return rect

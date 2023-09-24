@@ -21,7 +21,8 @@ pub enum ShapeType {
     Rect,
     Circle,
     Triangle,
-    Line
+    Line,
+    Text
 }
 
 #[deno_bindgen]
@@ -61,6 +62,7 @@ pub struct Shape {
     draw_type: DrawType,
     data: Vec<f32>,
     text: Option<String>,
+    path: Option<String>,
     color: Color
 }
 
@@ -81,7 +83,8 @@ fn create_image(width:u32, height:u32, c_image: DenoImageData) -> RgbaImage {
             ShapeType::Rect => shapes::rect::draw_rect_mut(&mut img, shape),
             ShapeType::Circle => shapes::circle::draw_circle_mut(&mut img, shape),
             ShapeType::Triangle => shapes::triangle::draw_triangle_mut(&mut img, shape),
-            ShapeType::Line => shapes::line::draw_line_mut(&mut img, shape)
+            ShapeType::Line => shapes::line::draw_line_mut(&mut img, shape),
+            ShapeType::Text => shapes::text::draw_text_mut(&mut img, shape)
         };
     }
     img

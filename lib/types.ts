@@ -36,6 +36,15 @@ export interface Line {
     color: Color
 }
 
+export interface Text {
+    x: number
+    y: number
+    size: number
+    text: string
+    font: string
+    color: Color
+}
+
 export interface RectOptions {
     x?: number
     y?: number
@@ -69,6 +78,15 @@ export interface LineOptions {
     y1?: number
     x2?: number
     y2?: number
+    color?: Color
+}
+
+export interface TextOptions {
+    x?: number
+    y?: number
+    size?: number
+    text?: string
+    font?: string
     color?: Color
 }
 
@@ -115,6 +133,20 @@ export interface LineReturn extends Line {
     draw(options?: RectOptions): this
     setMove(x: number, y: number): this
     setLine(x: number, y: number): this
+    setRGB(red: number, green: number, blue: number): this
+    setRGBA(red: number, green: number, blue: number, alpha: number): this
+    setGradient(gradient: Gradient): this
+    setColor(color: Color): this
+}
+
+export interface TextReturn extends Text {
+    draw(options?: RectOptions): this
+    setX(x: number): this
+    setY(y: number): this
+    setXAndY(x: number, y: number): this
+    setSize(size: number): this
+    setText(text: string): this
+    setFont(path: string): this
     setRGB(red: number, green: number, blue: number): this
     setRGBA(red: number, green: number, blue: number, alpha: number): this
     setGradient(gradient: Gradient): this

@@ -40,6 +40,7 @@ function draw(circle: CircleReturn, data: Shape[], options?: CircleOptions): Cir
         data: [options.x, options.y, options.radius],
         draw_type: options.type == "fill" ? "Fill" : "Stroke",
         text: null,
+        path: null,
         color: options.color
     });
     return circle
