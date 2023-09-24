@@ -18,3 +18,5 @@ rusttype = "0.9.3"
 num-integer = "0.1.45"
 serde = { version = "1.0.188", features = ["derive"] }
 raqote = "0.8.3"
+font-kit = "0.11.0"
+graphics = "0.0.0"

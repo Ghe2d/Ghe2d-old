@@ -37,6 +37,7 @@ function draw(line: LineReturn, data: Shape[], options?: LineOptions): LineRetur
         data: [options.x1, options.y1, options.x2, options.y2],
         draw_type: "Stroke",
         text: null,
+        path: null,
         color: options.color
     });
     return line

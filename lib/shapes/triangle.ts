@@ -48,6 +48,7 @@ function draw(triangle: TriangleReturn, data: Shape[], options?: TriangleOptions
         data: [options.x1, options.y1, options.x2, options.y2, options.x3, options.y3],
         draw_type: options.type == "fill" ? "Fill" : "Stroke",
         text: null,
+        path: null,
         color: options.color
     });
     return triangle

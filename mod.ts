@@ -1,9 +1,21 @@
 import { Shape } from "./lib/ffi.ts";
-import { CircleOptions, CircleReturn, RectOptions, RectReturn, TriangleOptions, TriangleReturn, LineOptions, LineReturn } from "./lib/types.ts";
+import { 
+    CircleOptions,
+    CircleReturn,
+    RectOptions,
+    RectReturn,
+    TriangleOptions,
+    TriangleReturn,
+    LineOptions,
+    LineReturn,
+    TextOptions,
+    TextReturn
+} from "./lib/types.ts";
 import createCircle from "./lib/shapes/circle.ts";
 import createRect from "./lib/shapes/rect.ts";
 import createTriangle from "./lib/shapes/triangle.ts";
 import createLine from "./lib/shapes/line.ts";
+import createText from "./lib/shapes/text.ts";
 
 export class Ghe2d {
     private shapes: Shape[]
@@ -26,11 +38,15 @@ export class Ghe2d {
     createLine(options?: LineOptions) : LineReturn{
         return createLine(this.shapes, options as LineOptions);
     }
+    createText(options?: TextOptions) : TextReturn{
+        return createText(this.shapes, options as TextOptions);
+    }
 }
 
 export * from "./lib/shapes/circle.ts";
 export * from "./lib/shapes/rect.ts";
 export * from "./lib/shapes/triangle.ts";
 export * from "./lib/shapes/line.ts";
+export * from "./lib/shapes/text.ts";
 export * from "./lib/types.ts";
 export * from "./lib/ffi.ts";
