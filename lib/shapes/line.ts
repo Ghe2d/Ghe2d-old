@@ -8,7 +8,7 @@ export default function(data: Shape[], options?: LineOptions): LineReturn {
     if(!options.y1) options.y1 = 1;
     if(!options.x2) options.x2 = 20;
     if(!options.y2) options.y2 = 5;
-    if(!options.color) options.color = {red: 0, green: 0, blue:0, alpha: 255};
+    if(!options.color) options.color = {RGBA: {red: 0, green: 0, blue:0, alpha: 255}};
     return { 
         x1:options.x1,
         y1:options.y1,

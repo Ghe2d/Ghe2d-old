@@ -6,7 +6,7 @@ export default function (data: Shape[], options?: CircleOptions): CircleReturn {
     if(!options) options ={};
     if(!options.x) options.x = 0;
     if(!options.y) options.y = 0;
-    if(!options.color) options.color = {red: 0, green: 0, blue:0, alpha: 255};
+    if(!options.color) options.color = {RGBA: {red: 0, green: 0, blue:0, alpha: 255}};
     if(!options.type) options.type = "fill";
     if(!options.radius && options.radius != 0) options.radius = 50;
     return { 

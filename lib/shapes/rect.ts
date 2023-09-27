@@ -6,7 +6,7 @@ export default function(data: Shape[], options?: RectOptions): RectReturn {
     if(!options) options ={};
     if(!options.x) options.x = 0;
     if(!options.y) options.y = 0;
-    if(!options.color) options.color = {red: 0, green: 0, blue:0, alpha: 255};
+    if(!options.color) options.color = {RGBA: {red: 0, green: 0, blue:0, alpha: 255}};
     if(!options.type) options.type = "fill";
     if(!options.width && options.width != 0) options.width = 50;
     if(!options.height && options.height != 0) options.height = 50;

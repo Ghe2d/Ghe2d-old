@@ -10,7 +10,7 @@ export default function(data: Shape[], options?: TriangleOptions): TriangleRetur
     if(!options.y2) options.y2 = 5;
     if(!options.x3) options.x3 = 30;
     if(!options.y3) options.y3 = 10;
-    if(!options.color) options.color = {red: 0, green: 0, blue:0, alpha: 255};
+    if(!options.color) options.color = {RGBA: {red: 0, green: 0, blue:0, alpha: 255}};
     if(!options.type) options.type = "fill";
     return { 
         x1:options.x1,

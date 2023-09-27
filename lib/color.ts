@@ -2,7 +2,7 @@ import { CreateGradient, Point } from "./ffi.ts";
 
 export type RGB = { red: number, green: number, blue: number };
 export type RGBA = { red: number, green: number, blue: number, alpha: number };
-export type Color = RGBA | CreateGradient[];
+export type Color = {RGBA: RGBA} | {Gradients: CreateGradient[]};
 export type Gradient = {addStop(position: number, color: RGBA | RGB): Gradient, stops: CreateGradient[], set: GradientSelect};
 export type GradientSelect = {
     Linear: { start: Point, end: Point }

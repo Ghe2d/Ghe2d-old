@@ -90,17 +90,17 @@ export function setType(shape: ShapesData | TriangleReturn, type: "fill" | "stro
     return shape;
 }
 export function setRGB(shape: ShapesData | TriangleReturn | LineReturn | TextReturn, red: number, green: number, blue: number) : ShapesData | TriangleReturn | LineReturn | TextReturn {
-    shape.color = {red, green, blue, alpha: 255};
+    shape.color = {RGBA: {red, green, blue, alpha: 255}};
     return shape;
 }
 
 export function setRGBA(shape: ShapesData | TriangleReturn | LineReturn | TextReturn, red: number, green: number, blue: number, alpha: number) : ShapesData | TriangleReturn | LineReturn | TextReturn {
-    shape.color = {red, green, blue, alpha};
+    shape.color = {RGBA: {red, green, blue, alpha}};
     return shape;
 }
 
 export function setGradient(shape: ShapesData | TriangleReturn | LineReturn | TextReturn, gradient: Gradient) : ShapesData | TriangleReturn | LineReturn | TextReturn {
-    shape.color = gradient.stops;
+    shape.color = {Gradients: gradient.stops};
     return shape;
 }
 

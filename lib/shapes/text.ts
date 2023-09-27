@@ -9,7 +9,7 @@ export default function(data: Shape[], options?: TextOptions): TextReturn {
     if(!options.size) options.size = 0;
     if(!options.text) options.text = "Ghe2d";
     if(!options.font) options.font = "./font/Ruwudu-Regular.ttf";
-    if(!options.color) options.color = {red: 0, green: 0, blue:0, alpha: 255};
+    if(!options.color) options.color = {RGBA: {red: 0, green: 0, blue:0, alpha: 255}};
     return { 
         x:options.x,
         y:options.y,
