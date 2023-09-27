@@ -1,10 +1,23 @@
-use image::{Rgba, RgbaImage, load_from_memory};
+use image::{Rgba, RgbaImage, ImageBuffer};
 use std::marker::PhantomData;
 use raqote::{Source, SolidSource, GradientStop, Point, Gradient, Spread, PathBuilder, DrawTarget, LineCap, LineJoin, DrawOptions, StrokeStyle};
 use super::super::{GradientSelect, Shape, Color};
 
-pub fn draw_line_mut(img: &mut RgbaImage, shape: &Shape) {
-    let (x1, y1, x2, y2) = (shape.data[0], shape.data[1], shape.data[2], shape.data[3]);
+pub fn draw_line_mut(img: &mut RgbaImage, shape: &Shape, width: u32, height: u32) {
+    let (mut x1, mut y1, mut x2, mut y2) = (shape.data[0], shape.data[1], shape.data[2], shape.data[3]);
+
+    if x1 > width as f32 {
+        x1 = width as f32;
+    }
+    if x2 > width as f32 {
+        x2 = width as f32;
+    }
+    if y1 > height as f32 {
+        y1 = height as f32;
+    }
+    if y2 > height as f32 {
+        y2 = height as f32;
+    }
 
     let x: f32;
     let y: f32;
@@ -23,7 +36,7 @@ pub fn draw_line_mut(img: &mut RgbaImage, shape: &Shape) {
     let source: Source;
     match &shape.color {
         Color::RGBA { red, green, blue, alpha } => {
-            source = Source::Solid(SolidSource{r: *red, g: *green, b: *blue, a: *alpha});
+            source = Source::Solid(SolidSource{r: *blue, g: *green, b: *red, a: *alpha});
         }
         Color::Gradients { gradients } => {
             let mut stops:Vec<GradientStop> = Vec::new();
@@ -49,7 +62,7 @@ pub fn draw_line_mut(img: &mut RgbaImage, shape: &Shape) {
     path_builder.close();
     let mut draw_target = DrawTarget::new(x as i32,y as i32);
     let style = StrokeStyle {
-        width: 1.,
+        width: 9.,
         cap: LineCap::Butt,
         join: LineJoin::Miter,
         miter_limit: 10.,
@@ -58,7 +71,7 @@ pub fn draw_line_mut(img: &mut RgbaImage, shape: &Shape) {
     };
     draw_target.stroke(&path_builder.finish(), &source, &style, &DrawOptions::new());
     let raw_image = draw_target.get_data_u8().to_vec();
-    let buffer = load_from_memory(&raw_image).unwrap().to_rgba8();
+    let buffer:RgbaImage = ImageBuffer::<Rgba<u8>, Vec<u8>>::from_raw(x as u32, y as u32, raw_image).unwrap();
     for (_x, _y, pixel,) in buffer.enumerate_pixels() {
         if pixel != &Rgba([0,0,0,0]) {
             img.put_pixel(_x, _y, pixel.to_owned());

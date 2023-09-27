@@ -1,16 +1,38 @@
 use image::{ImageBuffer, Rgba, RgbaImage};
 use std::marker::PhantomData;
-use raqote::{Source, SolidSource, GradientStop, Point, Gradient, Spread, PathBuilder, DrawTarget, LineCap, LineJoin, DrawOptions, StrokeStyle};
+use raqote::{
+    Source, SolidSource, 
+    GradientStop, Point, Gradient, 
+    Spread, PathBuilder, DrawTarget, 
+    LineCap, LineJoin, DrawOptions, 
+    StrokeStyle
+};
 use super::super::{DrawType, GradientSelect, Shape, Color};
 
-pub fn draw_rect_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape) {
-    let (x, y, width, height) = (shape.data[0], shape.data[1], shape.data[2], shape.data[3]);
+pub fn draw_rect_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape, _width: u32, _height: u32) {
+    let (mut x, mut y) = (shape.data[0], shape.data[1]);
+    let mut width = shape.data[2] as u32;
+    let mut height = shape.data[3] as u32;
+    if width > _width {
+        width = _width;
+        x = 0.;
+    }
+    else if width + x as u32 > _width {
+        x = (_width - width) as f32;
+    }
 
+    if height > _height {
+        height = _height;
+        y = 0.;
+    }
+    else if height + y as u32 > _height {
+        y = (_height - height) as f32;
+    }
     // Define the start and end points for the gradient
     let source: Source;
     match &shape.color {
         Color::RGBA { red, green, blue, alpha } => {
-            source = Source::Solid(SolidSource{r: *red, g: *green, b: *blue, a: *alpha});
+            source = Source::Solid(SolidSource{r: *blue, g: *green, b: *red, a: *alpha});
         }
         Color::Gradients { gradients } => {
             let mut stops:Vec<GradientStop> = Vec::new();
@@ -30,9 +52,10 @@ pub fn draw_rect_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape) {
             }
         }
     }
+
     // Create a new path builder
     let mut path_builder = PathBuilder::new();
-    path_builder.rect(x, y, width, height);
+    path_builder.rect(0., 0., width as f32, height as f32);
         // Create a new DrawTarget
     let mut draw_target = DrawTarget::new(width as i32, height as i32);
     match shape.draw_type {
@@ -58,8 +81,5 @@ pub fn draw_rect_mut(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, shape: &Shape) {
         if pixel != &Rgba([0,0,0,0]) {
             img.put_pixel(_x + x as u32, _y + y as u32, pixel.to_owned());
         }
-        // else {
-        //     img.put_pixel(_x + x as u32, _y + y as u32, *img.get_pixel(_x, _y));
-        // }
     }
 }
